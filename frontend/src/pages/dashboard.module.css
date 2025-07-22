@@ -1,0 +1,93 @@
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 32px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .list {
+    margin-bottom: 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .button {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+  
+  .buttonEdit {
+    background: #fbbf24;
+  }
+  
+  .buttonEdit:hover {
+    background: #f59e42;
+  }
+  
+  .buttonDelete {
+    background: #ef4444;
+  }
+  
+  .buttonDelete:hover {
+    background: #dc2626;
+  }
+  
+  .buttonSubmit {
+    background: #22c55e;
+    margin-right: 8px;
+  }
+  
+  .buttonSubmit:hover {
+    background: #16a34a;
+  }
+  
+  .buttonCancel {
+    background: #6b7280;
+  }
+  
+  .buttonCancel:hover {
+    background: #374151;
+  }
+  
+  .formTitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .message {
+    margin-top: 10px;
+    color: #16a34a;
+    text-align: center;
+  }
