@@ -148,11 +148,67 @@ export default function Dashboard() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: '#f3f4f6',
       padding: '20px'
     }}>
+      {/* Navigation Header */}
+      <header style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        maxWidth: '1200px',
+        margin: '0 auto 20px auto',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '12px',
+        padding: '12px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.2)'
+      }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 'bold',
+            color: '#3b82f6'
+          }}>
+            LabTracker
+          </span>
+        </Link>
+        <button
+          onClick={() => { 
+            localStorage.removeItem('token'); 
+            window.location.href = '/login'; 
+          }}
+          style={{
+            padding: '8px 20px',
+            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+          }}
+        >
+          Logout
+        </button>
+      </header>
+
       <div style={{
-        maxWidth: '800px',
+        maxWidth: '1200px',
         margin: '0 auto',
         background: 'rgba(255, 255, 255, 0.95)',
         borderRadius: '20px',
@@ -161,29 +217,47 @@ export default function Dashboard() {
         border: '1px solid rgba(255, 255, 255, 0.2)',
         overflow: 'hidden'
       }}>
-        {/* Header */}
+        {/* Dashboard Header */}
         <div style={{
           background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
           color: 'white',
-          padding: '30px',
+          padding: '40px 30px',
           textAlign: 'center',
           position: 'relative'
         }}>
           <h1 style={{
             fontSize: '2.5rem',
             fontWeight: 'bold',
-            margin: '0',
+            margin: '0 0 10px 0',
             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
           }}>
             🏥 Patient Dashboard
           </h1>
           <p style={{
-            margin: '10px 0 0 0',
-            opacity: '0.9',
-            fontSize: '1.1rem'
+            margin: '0',
+            opacity: '0.95',
+            fontSize: '1.1rem',
+            fontWeight: '400'
           }}>
             Manage your patients and their test records
           </p>
+          {patients.length === 0 && (
+            <div style={{
+              marginTop: '24px',
+              padding: '16px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              borderRadius: '12px',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
+            }}>
+              <p style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: '500' }}>
+                👋 Welcome! Get started by adding your first patient below.
+              </p>
+              <p style={{ margin: 0, fontSize: '0.875rem', opacity: '0.9' }}>
+                After adding a patient, you can create tests and track their results.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Content */}

@@ -148,10 +148,14 @@ export default function TestResults() {
   };
 
   return (
-    <>
+    <div style={{
+      minHeight: '100vh',
+      background: '#f3f4f6',
+      padding: '20px'
+    }}>
       <NavBar />
       <Toaster />
-      <div style={{ maxWidth: 700, margin: '40px auto', padding: 32, background: '#fff', borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
+      <div style={{ maxWidth: 700, margin: '0 auto', padding: 32, background: '#fff', borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center', color: '#3b82f6' }}>
           {test.type} ({test.date_taken}) Results
         </h1>
@@ -257,6 +261,6 @@ export default function TestResults() {
         </form>
         <div style={{ marginTop: 10, color: '#16a34a', textAlign: 'center' }}>{message}</div>
       </div>
-    </>
+    </div>
   );
 } 
