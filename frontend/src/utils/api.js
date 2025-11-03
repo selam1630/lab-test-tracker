@@ -17,8 +17,6 @@ export async function login({ email, password }) {
   });
   return res.json();
 }
-
-// Example for getting patients (protected route)
 export async function getPatients(token) {
   const res = await fetch(`${API_BASE}/patients`, {
     headers: { 'Authorization': `Bearer ${token}` }

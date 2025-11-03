@@ -12,10 +12,34 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+// --- 🎨 Consistent Styles and Colors ---
+const PRIMARY_COLOR = '#3b82f6'; // Tailwind Blue-500
+const SECONDARY_COLOR = '#22c55e'; // Tailwind Green-500
+const PAGE_BACKGROUND = '#f8fafc'; // Matches the overall background for Neumorphism
+const PRIMARY_GRADIENT = 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)';
+const DARK_BG_GRADIENT = 'linear-gradient(135deg, #172554 0%, #1e3a8a 100%)';
+
+// --- ⚙️ Keyframe Style for Gradient Text Animation (CSS-in-JS) ---
+const keyframesStyle = `
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`;
+
 export default function Home() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    // Inject keyframes style globally (Note: In a real Next.js app, use a <style jsx> block or CSS file)
+    if (typeof window !== 'undefined' && !document.getElementById('gradient-style')) {
+        const style = document.createElement('style');
+        style.id = 'gradient-style';
+        style.innerHTML = keyframesStyle;
+        document.head.appendChild(style);
+    }
+
     fetch('http://localhost:5000/api/hello')
       .then(res => res.json())
       .then(data => setMessage(data.message))
@@ -25,39 +49,33 @@ export default function Home() {
   const features = [
     {
       title: 'Patient Management',
-      description:
-        'Maintain comprehensive patient records with intuitive interfaces designed for healthcare professionals. Access complete medical histories, demographics, and contact information in one centralized system.',
-      color: '#667eea'
+      description: 'Maintain comprehensive patient records with intuitive interfaces designed for healthcare professionals. Access complete medical histories, demographics, and contact information.',
+      color: '#3b82f6' // Primary Blue
     },
     {
       title: 'Test Tracking',
-      description:
-        'Record and monitor laboratory tests with precision. Track test schedules, status updates, and maintain detailed logs of all diagnostic procedures performed.',
-      color: '#764ba2'
+      description: 'Record and monitor laboratory tests with precision. Track test schedules, status updates, and maintain detailed logs of all diagnostic procedures performed.',
+      color: '#22c55e' // Secondary Green
     },
     {
       title: 'Result Analysis',
-      description:
-        'Transform raw data into actionable insights. Visualize test results through interactive charts and generate comprehensive reports for informed decision-making.',
-      color: '#f093fb'
+      description: 'Transform raw data into actionable insights. Visualize test results through interactive charts and generate comprehensive reports for informed decision-making.',
+      color: '#f59e0b' // Amber/Yellow
     },
     {
       title: 'Document Export',
-      description:
-        'Generate professional documentation with a single click. Export detailed test reports as PDFs, maintaining formatting and compliance standards.',
-      color: '#4facfe'
+      description: 'Generate professional documentation with a single click. Export detailed test reports as PDFs, maintaining formatting and compliance standards.',
+      color: '#6366f1' // Indigo
     },
     {
       title: 'Data Security',
-      description:
-        'Enterprise-grade security measures protect sensitive patient information. Implement role-based access controls and maintain HIPAA compliance standards.',
-      color: '#43e97b'
+      description: 'Enterprise-grade security measures protect sensitive patient information. Implement role-based access controls and maintain HIPAA compliance standards.',
+      color: '#ef4444' // Danger Red
     },
     {
       title: 'Performance Optimized',
-      description:
-        'Built for speed and reliability. Experience seamless performance even with large datasets, ensuring quick access to critical information when you need it most.',
-      color: '#fa709a'
+      description: 'Built for speed and reliability. Experience seamless performance even with large datasets, ensuring quick access to critical information when you need it most.',
+      color: '#14b8a6' // Teal
     }
   ];
 
@@ -67,27 +85,37 @@ export default function Home() {
       {
         label: 'Tests Conducted',
         data: [300, 500, 400, 700, 600, 800],
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        borderColor: 'rgba(255, 255, 255, 1)',
-        borderWidth: 1,
-        borderRadius: 6
+        backgroundColor: PRIMARY_COLOR, // Using Primary Color for bars now
+        hoverBackgroundColor: SECONDARY_COLOR,
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderRadius: 8,
+        barThickness: 25 
       }
     ]
   };
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false, // Allow container to control height
     plugins: {
-      legend: { labels: { color: '#fff' } }
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: DARK_BG_GRADIENT.split(', ')[0], // Dark background for tooltip
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        padding: 10,
+        cornerRadius: 6,
+      }
     },
     scales: {
       x: {
-        ticks: { color: '#fff' },
-        grid: { color: 'rgba(255,255,255,0.1)' }
+        ticks: { color: 'rgba(55, 65, 81, 0.8)', font: { size: 14 } }, // Dark text for light background
+        grid: { display: false }
       },
       y: {
-        ticks: { color: '#fff' },
-        grid: { color: 'rgba(255,255,255,0.1)' }
+        ticks: { color: 'rgba(55, 65, 81, 0.8)', font: { size: 14 } },
+        grid: { color: 'rgba(0,0,0,0.1)', borderDash: [5, 5] } // Light grid lines
       }
     }
   };
@@ -96,101 +124,61 @@ export default function Home() {
     <div
       style={{
         minHeight: '100vh',
-        background: '#f3f4f6',
+        background: PAGE_BACKGROUND, 
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      {/* Background accents */}
+      
+      {/* --- Floating Background Accents --- */}
       <div
         style={{
-          position: 'absolute',
-          top: '-50%',
-          right: '-10%',
-          width: '500px',
-          height: '500px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '50%',
-          filter: 'blur(80px)'
+          position: 'absolute', top: '-150px', right: '50px', width: '600px', height: '600px',
+          background: PRIMARY_COLOR, opacity: 0.1, borderRadius: '50%', filter: 'blur(100px)', zIndex: 0
         }}
       />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-30%',
-          left: '-10%',
-          width: '400px',
-          height: '400px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '50%',
-          filter: 'blur(80px)'
-        }}
-      />
-
-      {/* Header */}
+      
+      {/* --- Sticky Header (NavBar) --- */}
       <header
         style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 100,
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+          position: 'sticky', top: 0, zIndex: 100,
+          background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.05)', boxShadow: '0 2px 15px rgba(0, 0, 0, 0.05)'
         }}
       >
         <div
           style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '16px 24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+            maxWidth: '1200px', margin: '0 auto', padding: '16px 24px',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
           }}
         >
+          {/* Logo/Brand */}
           <Link
             href="/"
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
           >
             <span
               style={{
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                color: '#3b82f6'
+                fontSize: '1.5rem', fontWeight: '900',
+                background: PRIMARY_GRADIENT, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))'
               }}
             >
-              LabTracker
+              🔬 LabTracker
             </span>
           </Link>
 
+          {/* Action Buttons */}
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <Link href="/login">
               <button
                 style={{
-                  padding: '10px 24px',
-                  background: 'transparent',
-                  color: '#3b82f6',
-                  border: '2px solid #3b82f6',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
+                  padding: '10px 20px', background: 'transparent', color: PRIMARY_COLOR,
+                  border: `2px solid ${PRIMARY_COLOR}`, borderRadius: '10px', fontSize: '0.95rem',
+                  fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease'
                 }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = '#3b82f6';
-                  e.target.style.color = 'white';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = '#3b82f6';
-                }}
+                onMouseEnter={(e) => { e.target.style.background = PRIMARY_COLOR; e.target.style.color = 'white'; }}
+                onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = PRIMARY_COLOR; }}
               >
                 Sign In
               </button>
@@ -198,17 +186,12 @@ export default function Home() {
             <Link href="/register">
               <button
                 style={{
-                  padding: '10px 24px',
-                  background: '#3b82f6',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+                  padding: '10px 20px', background: PRIMARY_GRADIENT, color: 'white',
+                  border: 'none', borderRadius: '10px', fontSize: '0.95rem', fontWeight: '600',
+                  cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: `0 4px 15px ${PRIMARY_COLOR}30`
                 }}
+                onMouseEnter={(e) => { e.target.style.transform = 'translateY(-1px)'; e.target.style.boxShadow = `0 6px 20px ${PRIMARY_COLOR}50`; }}
+                onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = `0 4px 15px ${PRIMARY_COLOR}30`; }}
               >
                 Sign Up
               </button>
@@ -217,332 +200,233 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section
-        style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: '80px 24px',
-          position: 'relative',
-          zIndex: 1
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <h1
-            style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              fontWeight: 'bold',
-              color: '#1f2937'
-            }}
-          >
-            Lab Test Result Tracker
-          </h1>
-          <p
-            style={{
-              fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
-              color: '#4b5563',
-              maxWidth: '700px',
-              margin: '0 auto 40px',
-              lineHeight: '1.6'
-            }}
-          >
-            Streamline your laboratory workflow with our comprehensive test
-            result management system. Track patients, manage tests, and generate
-            professional reports effortlessly.
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              gap: '16px',
-              justifyContent: 'center',
-              flexWrap: 'wrap'
-            }}
-          >
-            <Link href="/register">
-              <button
-                style={{
-                  padding: '16px 32px',
-                  background: '#3b82f6',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-                }}
-              >
-                Get Started Free
-              </button>
-            </Link>
-            <Link href="/login">
-              <button
-                style={{
-                  padding: '16px 32px',
-                  background: 'transparent',
-                  color: '#3b82f6',
-                  border: '2px solid #3b82f6',
-                  borderRadius: '12px',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                Sign In
-              </button>
-            </Link>
-          </div>
-        </div>
+      <main style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
 
-        {/* ✅ New Real-Time Insights Section */}
+        {/* --- Hero Section (Split Layout) --- */}
         <section
           style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '60px 24px',
-            color: 'white',
-            textAlign: 'center'
+            maxWidth: '1200px', margin: '0 auto', padding: '80px 24px 40px',
+            display: 'flex', gap: '40px', alignItems: 'center',
+            flexDirection: 'column', // Stacked by default
+            '@media (min-width: 1024px)': { // Side-by-side on large screens
+                flexDirection: 'row',
+            }
           }}
         >
-          <h2
-            style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              marginBottom: '40px',
-              textShadow: '0 3px 10px rgba(0,0,0,0.3)'
-            }}
-          >
-            Real-Time Lab Insights
-          </h2>
-
-          {/* Stats */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              gap: '30px',
-              marginBottom: '60px'
-            }}
-          >
-            {[
-              { label: 'Active Patients', value: 1240 },
-              { label: 'Pending Tests', value: 320 },
-              { label: 'Completed Reports', value: 980 }
-            ].map((stat, i) => (
-              <div
-                key={i}
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  borderRadius: '16px',
-                  padding: '30px 40px',
-                  minWidth: '240px',
-                  boxShadow: '0 6px 25px rgba(0,0,0,0.2)',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: '2.5rem',
-                    margin: 0,
-                    color: '#fff'
-                  }}
-                >
-                  {stat.value.toLocaleString()}
-                </h3>
-                <p
-                  style={{
-                    marginTop: '8px',
-                    color: 'rgba(255,255,255,0.85)'
-                  }}
-                >
-                  {stat.label}
+            {/* Left Column: Text & CTA */}
+            <div style={{ flex: 1, textAlign: 'center', '@media (min-width: 1024px)': { textAlign: 'left' } }}>
+                <p style={{
+                    color: PRIMARY_COLOR, fontWeight: 700, marginBottom: '10px',
+                    fontSize: '1rem', letterSpacing: '0.05em'
+                }}>
+                    {message}
                 </p>
-              </div>
-            ))}
-          </div>
+                <h1
+                    style={{
+                        fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: '900', color: '#0f172a',
+                        lineHeight: '1.1', marginBottom: '20px'
+                    }}
+                >
+                    Streamline Lab Management with 
+                    <span 
+                        style={{ 
+                            background: PRIMARY_GRADIENT, 
+                            WebkitBackgroundClip: 'text', 
+                            WebkitTextFillColor: 'transparent',
+                            // Add Animation
+                            backgroundSize: '200% auto',
+                            animation: 'gradient-shift 5s ease-in-out infinite'
+                        }}
+                    > 
+                        Real-Time Insights
+                    </span>
+                </h1>
+                <p
+                    style={{
+                        fontSize: 'clamp(1.1rem, 2vw, 1.4rem)', color: '#475569',
+                        maxWidth: '600px', margin: '0 auto 40px', lineHeight: '1.6',
+                        '@media (min-width: 1024px)': { margin: '0 0 40px 0' }
+                    }}
+                >
+                    The comprehensive system designed for modern laboratories to **track patients, manage diagnostic tests, and generate professional reports** effortlessly and securely.
+                </p>
+                <div
+                    style={{
+                        display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap',
+                        '@media (min-width: 1024px)': { justifyContent: 'flex-start' }
+                    }}
+                >
+                    <Link href="/register">
+                        <button
+                            style={{
+                                padding: '18px 36px', background: PRIMARY_GRADIENT, color: 'white',
+                                border: 'none', borderRadius: '12px', fontSize: '1.15rem', fontWeight: '700',
+                                cursor: 'pointer', transition: 'all 0.3s ease', boxShadow: `0 8px 25px ${PRIMARY_COLOR}50`
+                            }}
+                            onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = `0 10px 30px ${PRIMARY_COLOR}70`; }}
+                            onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = `0 8px 25px ${PRIMARY_COLOR}50`; }}
+                        >
+                            Start Free Trial
+                        </button>
+                    </Link>
+                    <Link href="/features">
+                        <button
+                            style={{
+                                padding: '18px 36px', background: 'transparent', color: PRIMARY_COLOR,
+                                border: `2px solid ${PRIMARY_COLOR}`, borderRadius: '12px', fontSize: '1.15rem',
+                                fontWeight: '700', cursor: 'pointer', transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => { e.target.style.background = `${PRIMARY_COLOR}10`; }}
+                            onMouseLeave={(e) => { e.target.style.background = 'transparent'; }}
+                        >
+                            View Features
+                        </button>
+                    </Link>
+                </div>
+            </div>
 
-          {/* Chart */}
-          <div
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              borderRadius: '16px',
-              padding: '20px',
-              maxWidth: '700px',
-              margin: '0 auto',
-              boxShadow: '0 6px 30px rgba(0,0,0,0.3)'
-            }}
-          >
-            <Bar data={chartData} options={chartOptions} />
-          </div>
+            <div
+  style={{
+    flex: 1,
+    width: '100%',
+    maxWidth: '500px',
+    height: '250px', 
+    background: 'white',
+    borderRadius: '20px',
+    padding: '20px',
+    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+    border: '1px solid #e5e7eb',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  }}
+>
+  <h3
+    style={{
+      fontSize: '1.1rem',
+      fontWeight: 600,
+      color: '#0f172a',
+      marginBottom: '10px',
+      textAlign: 'center',
+    }}
+  >
+    Tests Conducted (Monthly)
+  </h3>
+
+  {/* Chart container with fixed aspect ratio */}
+  <div style={{ flexGrow: 1, position: 'relative', height: '100%' }}>
+    <Bar
+      data={chartData}
+      options={{
+        ...chartOptions,
+        maintainAspectRatio: true,
+        aspectRatio: 2, 
+      }}
+    />
+  </div>
+</div>
+
+
         </section>
 
-        {/* Features Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-            gap: '32px',
-            marginTop: '100px',
-            marginBottom: '40px',
-            maxWidth: '1200px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            padding: '0 24px'
-          }}
-        >
-          {features.map((feature, index) => (
+        {/* --- Features Grid (Neumorphic Cards) --- */}
+        <section style={{ padding: '40px 24px 100px 24px' }}>
+            <h2 style={{
+                fontSize: '2.5rem', fontWeight: '700', color: '#0f172a',
+                textAlign: 'center', marginBottom: '60px'
+            }}>
+                Core Features Built for Excellence
+            </h2>
+
             <div
-              key={index}
-              style={{
-                background: 'white',
-                borderRadius: '20px',
-                padding: '0',
-                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
-                border: '1px solid rgba(0, 0, 0, 0.04)',
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.12)';
-                const accentBar = e.currentTarget.querySelector('.accent-bar');
-                const bottomAccent = e.currentTarget.querySelector('.bottom-accent');
-                if (accentBar) {
-                  accentBar.style.width = '100%';
-                  accentBar.style.opacity = '0.9';
-                }
-                if (bottomAccent) {
-                  bottomAccent.style.width = '120px';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.08)';
-                const accentBar = e.currentTarget.querySelector('.accent-bar');
-                const bottomAccent = e.currentTarget.querySelector('.bottom-accent');
-                if (accentBar) {
-                  accentBar.style.width = '5px';
-                  accentBar.style.opacity = '1';
-                }
-                if (bottomAccent) {
-                  bottomAccent.style.width = '70px';
-                }
-              }}
-            >
-              {/* Left Accent Bar */}
-              <div 
-                className="accent-bar"
                 style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: '5px',
-                  background: `linear-gradient(180deg, ${feature.color} 0%, ${feature.color}cc 100%)`,
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  borderRadius: '20px 0 0 20px',
-                  opacity: '1'
+                    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '32px', maxWidth: '1200px', margin: '0 auto'
                 }}
-              />
-              
-              {/* Card Content */}
-              <div style={{ 
-                padding: '40px 36px 36px 36px', 
-                position: 'relative',
-                flex: '1',
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                {/* Number Badge */}
-                <div style={{
-                  position: 'absolute',
-                  top: '28px',
-                  right: '28px',
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '10px',
-                  background: `linear-gradient(135deg, ${feature.color}12 0%, ${feature.color}20 100%)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.8125rem',
-                  fontWeight: '700',
-                  color: feature.color,
-                  border: `1.5px solid ${feature.color}25`,
-                  letterSpacing: '0.05em'
-                }}>
-                  {String(index + 1).padStart(2, '0')}
-                </div>
+            >
+                {features.map((feature, index) => (
+                    <div
+                        key={index}
+                        // NEUMORPHIC CARD STYLE
+                        style={{
+                            background: PAGE_BACKGROUND, // Key for Neumorphism is matching background
+                            borderRadius: '20px',
+                            // The soft, 'pushed-out' shadow
+                            boxShadow: '8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff',
+                            border: 'none',
+                            position: 'relative', overflow: 'hidden',
+                            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                            cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%',
+                            willChange: 'transform, box-shadow' 
+                        }}
+                        onMouseEnter={(e) => {
+                            // Pressed-in effect on hover (inverted shadows)
+                            e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff';
+                            e.currentTarget.style.transform = 'translateY(0)'; // Remove lift
+                        }}
+                        onMouseLeave={(e) => {
+                            // Return to pushed-out state
+                            e.currentTarget.style.boxShadow = '8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                    >
+                        {/* Corner Icon/Accent (KEPT FOR COLOR) */}
+                        <div 
+                            style={{
+                                position: 'absolute', top: 0, right: 0, 
+                                width: '60px', height: '60px', 
+                                background: feature.color, 
+                                opacity: 0.05, // Reduced opacity to keep it subtle
+                                borderBottomLeftRadius: '100%'
+                            }}
+                        />
+                        
+                        {/* Card Content */}
+                        <div style={{ 
+                            padding: '40px 36px 36px 36px', flex: '1', display: 'flex', flexDirection: 'column'
+                        }}>
+                            {/* Icon/Number Badge */}
+                            <div style={{
+                                width: '50px', height: '50px', marginBottom: '20px', borderRadius: '12px',
+                                background: PAGE_BACKGROUND, display: 'flex', alignItems: 'center',
+                                justifyContent: 'center', fontSize: '1.2rem', color: feature.color,
+                                border: 'none', fontWeight: '900',
+                                // Neumorphic style for badge/icon
+                                boxShadow: '5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff',
+                            }}>
+                                {String(index + 1)}
+                            </div>
 
-                {/* Title */}
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '600',
-                  color: '#0f172a',
-                  margin: '0 0 16px 0',
-                  lineHeight: '1.3',
-                  letterSpacing: '-0.02em',
-                  paddingRight: '60px'
-                }}>
-                  {feature.title}
-                </h3>
-                
-                {/* Description */}
-                <p style={{
-                  fontSize: '0.9375rem',
-                  color: '#475569',
-                  margin: 0,
-                  lineHeight: '1.75',
-                  fontWeight: '400',
-                  letterSpacing: '0.01em',
-                  flex: '1'
-                }}>
-                  {feature.description}
-                </p>
-
-                {/* Bottom Accent Line */}
-                <div 
-                  className="bottom-accent"
-                  style={{
-                    marginTop: '28px',
-                    height: '3px',
-                    width: '70px',
-                    background: `linear-gradient(90deg, ${feature.color} 0%, ${feature.color}88 50%, transparent 100%)`,
-                    borderRadius: '2px',
-                    transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
-                />
-              </div>
+                            {/* Title */}
+                            <h3 style={{
+                                fontSize: '1.6rem', fontWeight: '700', color: '#0f172a',
+                                margin: '0 0 16px 0', lineHeight: '1.3'
+                            }}>
+                                {feature.title}
+                            </h3>
+                            
+                            {/* Description */}
+                            <p style={{
+                                fontSize: '1rem', color: '#475569', margin: 0, lineHeight: '1.7', flex: '1'
+                            }}>
+                                {feature.description}
+                            </p>
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
-      </div>
-      </section>
+        </section>
+      </main>
 
       {/* Footer */}
       <footer
         style={{
-          background: 'white',
-          borderTop: '1px solid #e5e7eb',
-          padding: '40px 24px',
-          marginTop: '80px',
-          textAlign: 'center'
+          background: 'white', borderTop: '1px solid #e5e7eb',
+          padding: '40px 24px', textAlign: 'center'
         }}
       >
-        <p
-          style={{
-            color: '#6b7280',
-            fontSize: '0.95rem'
-          }}
-        >
-          © {new Date().getFullYear()} Lab Test Result Tracker. All rights
-          reserved.
+        <p style={{ color: '#6b7280', fontSize: '0.95rem' }}>
+          © {new Date().getFullYear()} LabTracker. All rights reserved.
         </p>
       </footer>
     </div>
