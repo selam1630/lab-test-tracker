@@ -6,7 +6,7 @@ import { register } from '../utils/api';
 
 export default function Register() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'lab' });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -114,6 +114,27 @@ export default function Register() {
                 e.target.style.boxShadow = 'none';
               }}
             />
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              color: '#374151',
+              fontWeight: '500',
+              fontSize: '0.9rem'
+            }}>
+              Role
+            </label>
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              style={{ width: '100%', padding: '12px 14px', border: '2px solid #e5e7eb', borderRadius: '12px' }}
+            >
+              <option value="lab">Lab Staff</option>
+              <option value="doctor">Doctor</option>
+            </select>
           </div>
 
           <div style={{ marginBottom: '20px' }}>

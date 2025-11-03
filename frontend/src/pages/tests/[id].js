@@ -18,6 +18,7 @@ export default function TestResults() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
   const resultsRef = useRef();
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -115,6 +116,21 @@ export default function TestResults() {
     toast.success('PDF exported!');
   };
 
+  const handleSendToDoctor = async () => {
+    if (!id) return;
+    setSending(true);
+    try {
+      const res = await fetch(`http://localhost:5000/api/tests/${id}/assign-to-doctor`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed');
+      toast.success('Result sent to doctor inbox');
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setSending(false);
+    }
+  };
+
   if (!test) return <div>Loading...</div>;
 
   // Chart.js data
@@ -159,9 +175,14 @@ export default function TestResults() {
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center', color: '#3b82f6' }}>
           {test.type} ({test.date_taken}) Results
         </h1>
-        <button onClick={handleExportPDF} style={{ marginBottom: 16, background: '#3b82f6', color: '#fff', padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', float: 'right' }}>
-          Export as PDF
-        </button>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 16 }}>
+          <button onClick={handleExportPDF} style={{ background: '#3b82f6', color: '#fff', padding: '8px 16px', borderRadius: 6, border: 'none', cursor: 'pointer' }}>
+            Export as PDF
+          </button>
+          <button onClick={handleSendToDoctor} disabled={sending} style={{ background: sending ? '#9ca3af' : '#22c55e', color: '#fff', padding: '8px 16px', borderRadius: 6, border: 'none', cursor: sending ? 'not-allowed' : 'pointer' }}>
+            {sending ? 'Sending…' : 'Email to Doctor'}
+          </button>
+        </div>
         <div ref={resultsRef}>
           <Bar data={chartData} options={chartOptions} />
           <ul style={{ marginBottom: '1.5rem', listStyle: 'none', padding: 0 }}>

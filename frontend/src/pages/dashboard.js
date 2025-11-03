@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ name: '', dob: '', gender: '' });
+  const [form, setForm] = useState({ name: '', dob: '', gender: '', doctorEmail: '' });
   const [message, setMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +52,7 @@ export default function Dashboard() {
       if (data.id) {
         setMessage('Patient updated!');
         setPatients(patients.map(p => (p.id === editingId ? data : p)));
-        setForm({ name: '', dob: '', gender: '' });
+        setForm({ name: '', dob: '', gender: '', doctorEmail: '' });
         setEditingId(null);
       } else {
         setMessage(data.message || 'Failed to update patient');
@@ -68,7 +68,7 @@ export default function Dashboard() {
       if (data.id) {
         setMessage('Patient added!');
         setPatients([...patients, data]);
-        setForm({ name: '', dob: '', gender: '' });
+        setForm({ name: '', dob: '', gender: '', doctorEmail: '' });
       } else {
         setMessage(data.message || 'Failed to add patient');
       }
@@ -76,7 +76,7 @@ export default function Dashboard() {
   };
 
   const handleEdit = (patient) => {
-    setForm({ name: patient.name, dob: patient.dob, gender: patient.gender });
+    setForm({ name: patient.name, dob: patient.dob, gender: patient.gender, doctorEmail: patient.doctorEmail || '' });
     setEditingId(patient.id);
   };
 
@@ -96,7 +96,7 @@ export default function Dashboard() {
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setForm({ name: '', dob: '', gender: '' });
+    setForm({ name: '', dob: '', gender: '', doctorEmail: '' });
   };
 
   // Filter and sort patients
@@ -118,6 +118,38 @@ export default function Dashboard() {
           return 0;
       }
     });
+
+  const handleExportCsv = () => {
+    const rows = [
+      ['ID', 'Name', 'Date of Birth', 'Gender']
+    ];
+    filteredAndSortedPatients.forEach(p => {
+      rows.push([
+        String(p.id ?? ''),
+        (p.name ?? '').replace(/\"/g, '"'),
+        String(p.dob ?? ''),
+        String(p.gender ?? '')
+      ]);
+    });
+    const csv = rows
+      .map(r => r
+        .map(field => {
+          const needsQuotes = /[",\n]/.test(field);
+          const escaped = String(field).replace(/"/g, '""');
+          return needsQuotes ? `"${escaped}"` : escaped;
+        })
+        .join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'patients_export.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   if (loading) return (
     <div style={{
@@ -263,6 +295,30 @@ export default function Dashboard() {
               <option value="dob">Sort by Date of Birth</option>
               <option value="gender">Sort by Gender</option>
             </select>
+            <button
+              onClick={handleExportCsv}
+              style={{
+                padding: '10px 16px',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(16, 185, 129, 0.3)';
+              }}
+            >
+              Export CSV
+            </button>
           </div>
 
           {/* Patients List */}
@@ -451,6 +507,24 @@ export default function Dashboard() {
                   value={form.gender}
                   onChange={handleChange}
                   required
+                  style={{
+                    width: '100%',
+                    padding: '15px',
+                    border: '2px solid #e5e7eb',
+                    borderRadius: '10px',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s ease',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                />
+                <input
+                  name="doctorEmail"
+                  type="email"
+                  placeholder="Doctor Email (optional)"
+                  value={form.doctorEmail}
+                  onChange={handleChange}
                   style={{
                     width: '100%',
                     padding: '15px',

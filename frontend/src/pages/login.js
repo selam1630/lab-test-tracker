@@ -19,9 +19,14 @@ export default function Login() {
     const res = await login(form);
     if (res.token) {
       localStorage.setItem('token', res.token);
+      if (res.user) localStorage.setItem('user', JSON.stringify(res.user));
       setMessage('✅ Login successful! Redirecting...');
       setTimeout(() => {
-        router.push('/dashboard');
+        if (res.user?.role === 'doctor') {
+          router.push('/doctor/inbox');
+        } else {
+          router.push('/dashboard');
+        }
       }, 1000);
     } else {
       setMessage(res.message || '❌ Login failed. Please check your credentials.');

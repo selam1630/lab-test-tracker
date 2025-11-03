@@ -11,6 +11,7 @@ export default function PatientTests() {
   const [form, setForm] = useState({ type: '', date_taken: '' });
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -85,6 +86,24 @@ export default function PatientTests() {
     setForm({ type: '', date_taken: '' });
   };
 
+  const handleSendToDoctor = async () => {
+    setSending(true);
+    setMessage('');
+    try {
+      const res = await fetch(`http://localhost:5000/api/patients/${id}/send-results`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed');
+      setMessage('✅ Results sent to the associated doctor');
+    } catch (e) {
+      setMessage(`❌ ${e.message}`);
+    } finally {
+      setSending(false);
+    }
+  };
+
   if (!patient) return <div style={{
     minHeight: '100vh',
     background: '#f3f4f6',
@@ -104,6 +123,24 @@ export default function PatientTests() {
     }}>
       <NavBar />
       <div style={{ maxWidth: 600, margin: '0 auto', padding: 32, background: '#fff', borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>Send Results</h1>
+        <button
+          onClick={handleSendToDoctor}
+          disabled={sending}
+          style={{
+            padding: '8px 16px',
+            background: sending ? '#9ca3af' : '#3b82f6',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 8,
+            fontWeight: 600,
+            cursor: sending ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {sending ? 'Sending...' : 'Email Results to Doctor'}
+        </button>
+      </div>
       <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center' }}>
         {patient.name}'s Tests
       </h1>
