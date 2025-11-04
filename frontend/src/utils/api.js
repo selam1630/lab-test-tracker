@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://lab-test-tracker-3.onrender.com/api';
 
 export async function register({ name, email, password, role }) {
   const res = await fetch(`${API_BASE}/auth/register`, {
