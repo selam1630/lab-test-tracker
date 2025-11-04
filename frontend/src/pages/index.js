@@ -11,15 +11,11 @@ import {
 } from 'chart.js';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
-// --- 🎨 Consistent Styles and Colors ---
-const PRIMARY_COLOR = '#3b82f6'; // Tailwind Blue-500
-const SECONDARY_COLOR = '#22c55e'; // Tailwind Green-500
-const PAGE_BACKGROUND = '#f8fafc'; // Matches the overall background for Neumorphism
+const PRIMARY_COLOR = '#3b82f6'; 
+const SECONDARY_COLOR = '#22c55e'; 
+const PAGE_BACKGROUND = '#f8fafc'; 
 const PRIMARY_GRADIENT = 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)';
 const DARK_BG_GRADIENT = 'linear-gradient(135deg, #172554 0%, #1e3a8a 100%)';
-
-// --- ⚙️ Keyframe Style for Gradient Text Animation (CSS-in-JS) ---
 const keyframesStyle = `
   @keyframes gradient-shift {
     0% { background-position: 0% 50%; }
@@ -32,7 +28,6 @@ export default function Home() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Inject keyframes style globally (Note: In a real Next.js app, use a <style jsx> block or CSS file)
     if (typeof window !== 'undefined' && !document.getElementById('gradient-style')) {
         const style = document.createElement('style');
         style.id = 'gradient-style';
@@ -50,32 +45,32 @@ export default function Home() {
     {
       title: 'Patient Management',
       description: 'Maintain comprehensive patient records with intuitive interfaces designed for healthcare professionals. Access complete medical histories, demographics, and contact information.',
-      color: '#3b82f6' // Primary Blue
+      color: '#3b82f6' 
     },
     {
       title: 'Test Tracking',
       description: 'Record and monitor laboratory tests with precision. Track test schedules, status updates, and maintain detailed logs of all diagnostic procedures performed.',
-      color: '#22c55e' // Secondary Green
+      color: '#22c55e' 
     },
     {
       title: 'Result Analysis',
       description: 'Transform raw data into actionable insights. Visualize test results through interactive charts and generate comprehensive reports for informed decision-making.',
-      color: '#f59e0b' // Amber/Yellow
+      color: '#f59e0b' 
     },
     {
       title: 'Document Export',
       description: 'Generate professional documentation with a single click. Export detailed test reports as PDFs, maintaining formatting and compliance standards.',
-      color: '#6366f1' // Indigo
+      color: '#6366f1'
     },
     {
       title: 'Data Security',
       description: 'Enterprise-grade security measures protect sensitive patient information. Implement role-based access controls and maintain HIPAA compliance standards.',
-      color: '#ef4444' // Danger Red
+      color: '#ef4444' 
     },
     {
       title: 'Performance Optimized',
       description: 'Built for speed and reliability. Experience seamless performance even with large datasets, ensuring quick access to critical information when you need it most.',
-      color: '#14b8a6' // Teal
+      color: '#14b8a6' 
     }
   ];
 
@@ -110,12 +105,12 @@ export default function Home() {
     },
     scales: {
       x: {
-        ticks: { color: 'rgba(55, 65, 81, 0.8)', font: { size: 14 } }, // Dark text for light background
+        ticks: { color: 'rgba(55, 65, 81, 0.8)', font: { size: 14 } },
         grid: { display: false }
       },
       y: {
         ticks: { color: 'rgba(55, 65, 81, 0.8)', font: { size: 14 } },
-        grid: { color: 'rgba(0,0,0,0.1)', borderDash: [5, 5] } // Light grid lines
+        grid: { color: 'rgba(0,0,0,0.1)', borderDash: [5, 5] }
       }
     }
   };

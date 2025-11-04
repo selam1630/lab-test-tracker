@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react';
 import { getPatients } from '../utils/api';
-// import Link from 'next/link';
 import { useRouter } from 'next/router';
 import NavBar from '../components/NavBar';
-
-// --- Design Color Palette (Approximation from image) ---
-const PRIMARY_BLUE = '#3b82f6'; // For active states, buttons
-const SECONDARY_BLUE = '#1d4ed8'; // For gradients/darker blue
-const BACKGROUND_GRAY = '#f4f7f9'; // Main background color
-const SIDEBAR_BLUE = '#2e3a67'; // Darker blue for sidebar background
+const PRIMARY_BLUE = '#3b82f6'; 
+const SECONDARY_BLUE = '#1d4ed8'; 
+const BACKGROUND_GRAY = '#f4f7f9';
+const SIDEBAR_BLUE = '#2e3a67'; 
 const TEXT_GRAY = '#6b7280';
 const BORDER_GRAY = '#e5e7eb';
 
-const STATUS_SAVED = '#9ca3af'; // Saved/Grey
-const STATUS_APPROVED = '#10b981'; // Approved/Green
-const STATUS_REJECTED = '#ef4444'; // Rejected/Red
-
-// Helper to get status tag style (simulating the Saved, Approved, Rejected tags)
+const STATUS_SAVED = '#9ca3af'; 
+const STATUS_APPROVED = '#10b981';
+const STATUS_REJECTED = '#ef4444'; 
 const getStatusStyle = (status) => {
   switch (status.toLowerCase()) {
     case 'approved':
@@ -36,20 +31,14 @@ export default function Dashboard() {
   const [form, setForm] = useState({ name: '', dob: '', gender: '', doctorEmail: '' });
   const [message, setMessage] = useState('');
   const [editingId, setEditingId] = useState(null);
-  
-  // Adjusted State Names to match the new image structure more closely
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // Using a simulated status filter
+  const [statusFilter, setStatusFilter] = useState('all'); 
   const [sortBy, setSortBy] = useState('name');
   
   const [showConfirm, setShowConfirm] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState(null);
-  
-  // --- Pagination State (Optional but good practice for large data) ---
   const [currentPage, setCurrentPage] = useState(1);
-  const patientsPerPage = 25; // Matching the "Displaying 25 out of 1300" in the image
-
-  // Mocking Statuses and IDs since your patients object doesn't have them
+  const patientsPerPage = 25;
   const mockPatientData = (p) => ({
     ...p,
     activityId: `PC-0023-${String(p.id).padStart(2, '0')}`,
@@ -59,6 +48,24 @@ export default function Dashboard() {
     submittedTo: 'Admin Staff',
     submittedDate: '07/08/25'
   });
+
+  const handleOpenPatientOrLatestTest = async (patientId) => {
+    try {
+      const res = await fetch('http://localhost:5000/api/tests');
+      const data = await res.json();
+      const testsForPatient = (data || []).filter(t => String(t.patientId) === String(patientId));
+      if (testsForPatient.length > 0) {
+        const latest = [...testsForPatient].sort((a, b) => new Date(b.date_taken) - new Date(a.date_taken))[0];
+        if (latest?.id) {
+          router.push(`/tests/${latest.id}`);
+          return;
+        }
+      }
+      router.push(`/patients/${patientId}`);
+    } catch {
+      router.push(`/patients/${patientId}`);
+    }
+  };
 
 
   useEffect(() => {
@@ -70,10 +77,9 @@ export default function Dashboard() {
     }
     getPatients(token).then(data => {
       if (Array.isArray(data)) {
-        // Mock data to match the table columns in the image
         const mockedData = data.map((p, index) => ({
           ...p,
-          id: p.id || index + 1, // Ensure ID exists for mocking
+          id: p.id || index + 1, 
           activityId: `PC-0023-${String(p.id || index + 1).padStart(2, '0')}`,
           counselledOn: index % 2 === 0 ? 'Diseases, Medication' : 'Medication, Diet',
           status: p.id % 5 === 0 ? 'Rejected' : p.id % 3 === 0 ? 'Approved' : 'Saved',
@@ -87,8 +93,6 @@ export default function Dashboard() {
       setLoading(false);
     });
   }, []);
-
-  // --- Functions (Logic is preserved, only minor status/ID addition) ---
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
@@ -101,7 +105,6 @@ export default function Dashboard() {
     }
 
     if (editingId) {
-      // Edit mode (Logic remains the same, mock data re-applied on success)
       const res = await fetch(`http://localhost:5000/api/patients/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -117,7 +120,6 @@ export default function Dashboard() {
         setMessage(data.message || 'Failed to update patient');
       }
     } else {
-      // Add mode (Logic remains the same, mock data added on success)
       const res = await fetch('http://localhost:5000/api/patients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -160,8 +162,6 @@ export default function Dashboard() {
     setEditingId(null);
     setForm({ name: '', dob: '', gender: '', doctorEmail: '' });
   };
-
-  // Filter and sort patients
   const filteredAndSortedPatients = patients
     .filter(patient => {
       const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -182,7 +182,6 @@ export default function Dashboard() {
       }
     });
     
-  // --- Pagination calculation ---
   const totalPages = Math.ceil(filteredAndSortedPatients.length / patientsPerPage);
   const indexOfLastPatient = currentPage * patientsPerPage;
   const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
@@ -193,12 +192,7 @@ export default function Dashboard() {
         setCurrentPage(pageNumber);
     }
   };
-  // -----------------------------
-
-
-  // The CSV export logic remains exactly the same as it's purely logic
   const handleExportCsv = () => {
-    // ... CSV export logic ...
     const rows = [
       ['ID', 'Name', 'Date of Birth', 'Gender']
     ];
@@ -416,7 +410,7 @@ export default function Dashboard() {
                 fontSize: '0.9rem',
                 transition: 'background-color 0.2s ease',
                 cursor: 'pointer'
-              }} onClick={() => router.push(`/patients/${p.id}`)} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}>
+              }} onClick={() => handleOpenPatientOrLatestTest(p.id)} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}>
                 
                 {/* ACTIVITY ID */}
                 <div style={{ fontWeight: '500', color: SECONDARY_BLUE }}>{p.activityId}</div>

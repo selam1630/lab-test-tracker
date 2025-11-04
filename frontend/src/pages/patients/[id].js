@@ -12,6 +12,7 @@ export default function PatientTests() {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [redirecting, setRedirecting] = useState(true);
 
   useEffect(() => {
     if (!id) return;
@@ -24,6 +25,28 @@ export default function PatientTests() {
       .then(res => res.json())
       .then(data => setTests(data.filter(t => t.patientId == id)));
   }, [id]);
+
+  // Auto-redirect straight to the most recent test's Results page if tests exist
+  useEffect(() => {
+    if (!tests) return;
+    if (tests.length === 0) { setRedirecting(false); return; }
+    // pick the most recent by date_taken (fallback to first)
+    const sorted = [...tests].sort((a, b) => new Date(b.date_taken) - new Date(a.date_taken));
+    const latest = sorted[0];
+    if (latest?.id) {
+      router.replace(`/tests/${latest.id}`);
+    }
+  }, [tests]);
+
+  if (redirecting) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6' }}>
+        <div style={{ background: '#fff', padding: 24, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.08)', color: '#6b7280' }}>
+          Loading latest test…
+        </div>
+      </div>
+    );
+  }
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
