@@ -4,7 +4,7 @@ require('dotenv').config();
 const sequelize = require('./models');
 const User = require('./models/User');
 const authRoutes = require('./routes/auth');
-const Patient = require('./models/patient');
+const Patient = require('./models/Patient');
 const Test = require('./models/Test');
 const TestResult = require('./models/TestResult');
 const patientRoutes = require('./routes/patients');
