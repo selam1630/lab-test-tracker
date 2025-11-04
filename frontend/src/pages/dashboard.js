@@ -5,7 +5,7 @@ import NavBar from '../components/NavBar';
 const PRIMARY_BLUE = '#3b82f6'; 
 const SECONDARY_BLUE = '#1d4ed8'; 
 const BACKGROUND_GRAY = '#f4f7f9';
-const SIDEBAR_BLUE = '#2e3a67'; 
+// Removed unused SIDEBAR_BLUE to satisfy linter
 const TEXT_GRAY = '#6b7280';
 const BORDER_GRAY = '#e5e7eb';
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
 
   const handleOpenPatientOrLatestTest = async (patientId) => {
     try {
-      const res = await fetch('http://localhost:5000/api/tests');
+      const res = await fetch('https://lab-test-tracker-3.onrender.com/api/tests');
       const data = await res.json();
       const testsForPatient = (data || []).filter(t => String(t.patientId) === String(patientId));
       if (testsForPatient.length > 0) {
@@ -105,7 +105,7 @@ export default function Dashboard() {
     }
 
     if (editingId) {
-      const res = await fetch(`http://localhost:5000/api/patients/${editingId}`, {
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -120,7 +120,7 @@ export default function Dashboard() {
         setMessage(data.message || 'Failed to update patient');
       }
     } else {
-      const res = await fetch('http://localhost:5000/api/patients', {
+      const res = await fetch('https://lab-test-tracker-3.onrender.com/api/patients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, userId: 1 })
@@ -143,7 +143,7 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/patients/${id}`, {
+    const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${id}`, {
       method: 'DELETE',
     });
     if (res.ok) {

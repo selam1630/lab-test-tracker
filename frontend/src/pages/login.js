@@ -231,7 +231,7 @@ export default function Login() {
             margin: 0,
             fontSize: '0.9rem'
           }}>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" style={{
               color: '#3b82f6',
               textDecoration: 'none',

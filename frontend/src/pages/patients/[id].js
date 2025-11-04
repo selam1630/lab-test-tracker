@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import NavBar from '../../components/NavBar';
 
 export default function PatientTests() {
@@ -17,11 +16,11 @@ export default function PatientTests() {
   useEffect(() => {
     if (!id) return;
     // Fetch patient info
-    fetch(`http://localhost:5000/api/patients/${id}`)
+    fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${id}`)
       .then(res => res.json())
       .then(setPatient);
     // Fetch tests for this patient
-    fetch(`http://localhost:5000/api/tests`)
+    fetch(`https://lab-test-tracker-3.onrender.com/api/tests`)
       .then(res => res.json())
       .then(data => setTests(data.filter(t => t.patientId == id)));
   }, [id]);
@@ -36,7 +35,7 @@ export default function PatientTests() {
     if (latest?.id) {
       router.replace(`/tests/${latest.id}`);
     }
-  }, [tests]);
+  }, [tests, router]);
 
   if (redirecting) {
     return (
@@ -54,7 +53,7 @@ export default function PatientTests() {
     e.preventDefault();
     if (editingId) {
       // Edit test
-      const res = await fetch(`http://localhost:5000/api/tests/${editingId}`, {
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/tests/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -70,7 +69,7 @@ export default function PatientTests() {
       }
     } else {
       // Add test
-      const res = await fetch('http://localhost:5000/api/tests', {
+      const res = await fetch('https://lab-test-tracker-3.onrender.com/api/tests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, patientId: id })
@@ -92,7 +91,7 @@ export default function PatientTests() {
   };
 
   const handleDelete = async (testId) => {
-    const res = await fetch(`http://localhost:5000/api/tests/${testId}`, {
+    const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/tests/${testId}`, {
       method: 'DELETE'
     });
     if (res.ok) {
@@ -113,7 +112,7 @@ export default function PatientTests() {
     setSending(true);
     setMessage('');
     try {
-      const res = await fetch(`http://localhost:5000/api/patients/${id}/send-results`, {
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${id}/send-results`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -165,7 +164,7 @@ export default function PatientTests() {
         </button>
       </div>
       <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', textAlign: 'center' }}>
-        {patient.name}'s Tests
+        {patient.name}&apos;s Tests
       </h1>
       <ul style={{ marginBottom: '1.5rem', listStyle: 'none', padding: 0 }}>
         {tests.map(t => (
