@@ -107,7 +107,7 @@ export default function Dashboard() {
     if (editingId) {
       const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${editingId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(form)
       });
       const data = await res.json();
@@ -122,7 +122,7 @@ export default function Dashboard() {
     } else {
       const res = await fetch('https://lab-test-tracker-3.onrender.com/api/patients', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ ...form, userId: 1 })
       });
       const data = await res.json();
@@ -145,6 +145,7 @@ export default function Dashboard() {
     const token = localStorage.getItem('token');
     const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/patients/${id}`, {
       method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     if (res.ok) {
       setMessage('Patient deleted successfully!');
