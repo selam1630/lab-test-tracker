@@ -52,11 +52,11 @@ export default function TestResults() {
   useEffect(() => {
     if (!id) return;
     // Fetch test info
-    fetch(`http://localhost:5000/api/tests/${id}`)
+    fetch(`https://lab-test-tracker-3.onrender.com/api/tests/${id}`)
       .then(res => res.json())
       .then(setTest);
     // Fetch test results for this test
-    fetch(`http://localhost:5000/api/test-results`)
+    fetch(`https://lab-test-tracker-3.onrender.com/api/test-results`)
       .then(res => res.json())
       .then(data => setResults(data.filter(r => r.testId == id)));
   }, [id]);
@@ -67,7 +67,7 @@ export default function TestResults() {
     e.preventDefault();
     if (editingId) {
       // Edit result
-      const res = await fetch(`http://localhost:5000/api/test-results/${editingId}`, {
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/test-results/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -85,7 +85,7 @@ export default function TestResults() {
       }
     } else {
       // Add result
-      const res = await fetch('http://localhost:5000/api/test-results', {
+      const res = await fetch('https://lab-test-tracker-3.onrender.com/api/test-results', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, testId: id })
@@ -115,7 +115,7 @@ export default function TestResults() {
   };
 
   const handleDelete = async (resultId) => {
-    const res = await fetch(`http://localhost:5000/api/test-results/${resultId}`, {
+    const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/test-results/${resultId}`, {
       method: 'DELETE'
     });
     if (res.ok) {
@@ -175,7 +175,7 @@ export default function TestResults() {
     if (!id) return;
     setSending(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/tests/${id}/assign-to-doctor`, { method: 'POST' });
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/tests/${id}/assign-to-doctor`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed');
       toast.success('Result sent to doctor inbox');
@@ -246,7 +246,7 @@ export default function TestResults() {
     try {
       const created = [];
       for (const body of payloads) {
-        const res = await fetch('http://localhost:5000/api/test-results', {
+        const res = await fetch('https://lab-test-tracker-3.onrender.com/api/test-results', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body)

@@ -26,7 +26,7 @@ export default function DoctorInbox() {
     if (!email) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/doctor/inbox?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`https://lab-test-tracker-3.onrender.com/api/doctor/inbox?email=${encodeURIComponent(email)}`);
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } finally {

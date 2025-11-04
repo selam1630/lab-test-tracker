@@ -35,7 +35,7 @@ export default function Home() {
         document.head.appendChild(style);
     }
 
-    fetch('http://localhost:5000/api/hello')
+    fetch('https://lab-test-tracker-3.onrender.com/api/hello')
       .then(res => res.json())
       .then(data => setMessage(data.message))
       .catch(() => setMessage('Welcome to Lab Test Result Tracker'));

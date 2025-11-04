@@ -20,7 +20,7 @@ export default function Login() {
     if (res.token) {
       localStorage.setItem('token', res.token);
       if (res.user) localStorage.setItem('user', JSON.stringify(res.user));
-      setMessage('✅ Login successful! Redirecting...');
+      setMessage('Login successful! Redirecting...');
       setTimeout(() => {
         if (res.user?.role === 'doctor') {
           router.push('/doctor/inbox');

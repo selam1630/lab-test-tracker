@@ -18,7 +18,7 @@ export default function Register() {
     setMessage('');
     const res = await register(form);
     if (res.id) {
-      setMessage('✅ Registration successful! Redirecting to login...');
+      setMessage('Registration successful! Redirecting to login...');
       setTimeout(() => {
         router.push('/login');
       }, 1500);
@@ -263,13 +263,13 @@ export default function Register() {
             textAlign: 'center',
             marginBottom: '20px',
             fontSize: '0.9rem',
-            background: message.includes('✅') || message.includes('successful')
+            background: message.includes('') || message.includes('successful')
               ? '#d1fae5'
               : '#fee2e2',
-            color: message.includes('✅') || message.includes('successful')
+            color: message.includes('') || message.includes('successful')
               ? '#065f46'
               : '#991b1b',
-            border: `1px solid ${message.includes('✅') || message.includes('successful') ? '#10b981' : '#ef4444'}`
+            border: `1px solid ${message.includes('') || message.includes('successful') ? '#10b981' : '#ef4444'}`
           }}>
             {message}
           </div>
