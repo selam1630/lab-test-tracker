@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const Patient = require('./patient');
+const Patient = require('./Patient');
 
 const Test = sequelize.define('Test', {
   type: { type: DataTypes.STRING, allowNull: false },

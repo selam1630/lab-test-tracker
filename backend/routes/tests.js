@@ -1,6 +1,6 @@
 const express = require('express');
 const Test = require('../models/Test');
-const Patient = require('../models/patient');
+const Patient = require('../models/Patient');
 const TestResult = require('../models/TestResult');
 const nodemailer = require('nodemailer');
 const DoctorInbox = require('../models/DoctorInbox');
