@@ -1,12 +1,10 @@
 const express = require('express');
 const DoctorInbox = require('../models/DoctorInbox');
 const Test = require('../models/Test');
-const Patient = require('../models/patient');
+const Patient = require('../models/Patient');
 const TestResult = require('../models/TestResult');
 
 const router = express.Router();
-
-// Get a doctor's inbox by email
 router.get('/inbox', async (req, res) => {
   try {
     const { email } = req.query;
